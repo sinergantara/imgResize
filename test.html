@@ -29,7 +29,6 @@
     <script>
         let resizedImage;
         const fileInput = document.getElementById("file_input");
-        fileInput.addEventListener("change", handleFiles, false);
         function handleFiles() {
             const file = this.files[0];
 
@@ -45,6 +44,7 @@
                 URL.revokeObjectURL(ori_img.src);
             };
         }
+        fileInput.addEventListener("change", handleFiles, false);
 
         const formElem = document.querySelector("form");
 

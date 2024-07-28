@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pure javascript Image Resizer</title>
+</head>
+
+<body>
+    <h2>Resize image before upload</h2>
+    <p>
+    <h4>Original</h4>
+    <img alt="Original" id="ori_img"><br><span id="size_ori"></span> <br>
+    <h4>Resized</h4>
+    <img alt="Resized" id="small_img"><br><span id="size_small"></span>
+    </p>
+
+    <form action="server_side.php" enctype="multipart/form-data" method="post">
+        <label for="text">Text value input:</label><br>
+        <input type="text" name="text" value="TEXT INPUT TEST"><br><br>
+        <label for="file_input">Select a file:</label>
+        <input type="file" id="file_input" name="image-file" accept="image/jpeg"><br>
+        <input type="submit" value="Submit" name="submit">
+    </form>
+
+
+    <script src="imgResize.js"></script>
+    <script>
+        let resizedImage;
+        const fileInput = document.getElementById("file_input");
+        fileInput.addEventListener("change", handleFiles, false);
+        function handleFiles() {
+            const file = this.files[0];
+
+            resizeImage(file).then((res) => {
+                small_img.src = res.url;
+                size_small.innerText = "Resized file size = " + res.size.toLocaleString('en-US') + " bytes";
+                resizedImage = res.file();
+            });
+
+            ori_img.src = URL.createObjectURL(file);
+            ori_img.onload = () => {
+                size_ori.innerText = "Original file size = " + file.size.toLocaleString('en-US') + " bytes";
+                URL.revokeObjectURL(ori_img.src);
+            };
+        }
+
+        const formElem = document.querySelector("form");
+
+        // formdata handler to retrieve data
+        formElem.addEventListener("formdata", (e) => {
+            console.log("formdata fired");
+
+            // modifies the form data
+            const formData = e.formData;
+            // formdata gets modified by the formdata event
+            formData.set("text", formData.get("text").toLowerCase());
+            if (resizedImage) {
+                formData.set("image-file", resizedImage);
+            }
+
+            // Display the key/value pairs
+            // for (const pair of formData.entries()) {
+            //     console.log(pair[0], pair[1]);
+            // }
+        });
+    </script>
+
+</body>
+
+</html>

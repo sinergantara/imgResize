@@ -1,5 +1,7 @@
 ## Resize image before upload
 
+By processing the image resizing on the client browser, the server’s tasks and load are reduced.
+
 **example**
 
 ```
